@@ -73,6 +73,30 @@ The probe doubles as a **community data collection tool**: report your drive in 
 and this table grows into a "which drives honour which knobs" reference that does not
 exist anywhere else.
 
+
+### First real run (DISC_3, 4.36 GB, 19.1 minutes)
+
+```
+bulk 4465 MB   3.90 MB/s (peak)   bad_blocks=0 …
+pass1 完成：好块 4464，坏块 2，用时 19.1 分钟
+坏区 1 段   LBA 2285568 - 2286592  (2 MB, 盘尾 lead-out 区)
+```
+
+The resulting ISO mounts as a normal disc (`Mount-DiskImage disc.iso`), exposes a valid
+`VIDEO_TS` tree, and all five episodes probe at 21.9–22.1 minutes — i.e. the image is
+usable end-to-end, not just byte-complete.
+
+The only unrecovered range is the **last 2 MB** of the disc (lead-out), which carries no
+video data. Retrying it at 512 KB / 64 KB / 8 KB / single-sector granularity failed, which
+is exactly the expected signature of a marginal outer edge rather than a software problem.
+
+### A note on "the disc is dead"
+
+The same drive read a *different* disc's outer region at **12.5 KB/s** (1 MB in 84 s) while
+reading this disc's identical region at **3.9 MB/s**. Same drive, same day, same tool.
+Disc condition dominates; drive state is the secondary variable. Any rescue tool that
+reports "failed" without a bad-sector map is hiding that distinction from the user.
+
 ---
 
 ## Design (next)
